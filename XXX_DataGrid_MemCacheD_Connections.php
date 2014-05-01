@@ -59,7 +59,7 @@ abstract class XXX_DataGrid_MemCacheD_Connections
 		
 		self::$dataGrids[$name] = $dataGrid;
 		
-		$settings['keyPrefix'] = $dataGrid . $settings['keyPrefix'];
+		$settings['keyPrefix'] = $dataGrid . '_' . $settings['keyPrefix'];
 		
 		if ($recycleName !== false && array_key_exists($recycleName, self::$dataGrids))
 		{

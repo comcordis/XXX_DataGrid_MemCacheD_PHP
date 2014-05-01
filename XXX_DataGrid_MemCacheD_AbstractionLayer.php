@@ -4,12 +4,9 @@ class XXX_DataGrid_MemCacheD_AbstractionLayer
 {
 	protected $connection = false;
 	
-	public function open ($name, $hostSettingsOrKeyPath)
+	public function open ($connection)
 	{
-		if (!$this->connection)
-		{
-			$this->connection = XXX_DataGrid_MemCacheD_Factory::create($name, $hostSettingsOrKeyPath);
-		}
+		$this->connection = $connection;
 		
 		return ($this->connection === false ? false : true);
 	}

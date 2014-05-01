@@ -45,12 +45,12 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 			foreach ($this->settings['servers'] as $server)
 			{
 				// There is no connection made at this point, only when a request is done
-				$this->connection->addServer($server['address'], $server['port'], $this->settings['persistent'], $server['weight']);
+				$this->connection->addServer($server['address'], $server['port'], $server['weight']);
 			}
 		}
 		else
 		{
-			$this->connection->addServer($this->settings['address'], $this->settings['port'], $this->settings['persistent'], $this->settings['weight']);
+			$this->connection->addServer($this->settings['address'], $this->settings['port'], $this->settings['weight']);
 		}		
 	}
 	
@@ -65,7 +65,7 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 	}
 	
 	public function getKeyPrefix ()
-	{
+	{		
 		return $this->settings['keyPrefix'];
 	}
 	
@@ -212,7 +212,6 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 					
 					if ($key !== '')
 					{
-						echo '[' . $key . ' ' . $value . ' ' . $this->compression . ' ' . $lifeTimeOrExpirationTimestamp . ']';
 						$tempResult = $this->connection->set($key, $value, $this->compression, $lifeTimeOrExpirationTimestamp);
 						
 						if ($tempResult !== false)
