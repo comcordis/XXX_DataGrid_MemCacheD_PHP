@@ -85,7 +85,7 @@ abstract class XXX_DataGrid_MemCacheD_Connections
 		
 		self::add('XXX', 'development', $settings);
 		self::add('XXX', 'local', $settings, false, 'development');
-		
+				
 		self::setDefaultPrefix(XXX::$deploymentInformation['project']);
 	}
 }

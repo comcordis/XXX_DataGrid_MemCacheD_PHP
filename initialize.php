@@ -7,4 +7,6 @@ include_once 'XXX_DataGrid_MemCacheD_Factory.php';
 include_once 'XXX_DataGrid_MemCacheD_Model.php';
 include_once 'XXX_DataGrid_MemCacheD_Connections.php';
 
+XXX_DataGrid_MemCacheD_Connections::initialize();
+
 ?>
