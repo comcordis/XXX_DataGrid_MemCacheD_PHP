@@ -3,107 +3,16 @@
 abstract class XXX_DataGrid_MemCacheD_Factory
 {	
 	public static $connections = array();
-	
-	public static function getHostsWithServer ($hostSettingsOrKeyPath = '', $server_ID = '')
-	{
-		global $XXX_Resources_DataGrid_MemCacheD_Hosts;
 		
-		if ($server_ID == '')
-		{
-			$server_ID = XXX_Server::$server_ID;
-		}
-		
-		if ($hostSettingsOrKeyPath == '')
-		{
-			$hostSettingsOrKeyPath = $XXX_Resources_DataGrid_MemCacheD_Hosts;
-		}
-		
-		if (XXX_Type::isArray($hostSettingsOrKeyPath))
-		{
-			$hostSettings = $hostSettingsOrKeyPath;
-		}
-		else
-		{
-			$hostSettings = XXX_Array::traverseKeyPath($XXX_Resources_DataGrid_MemCacheD_Hosts, $hostSettingsOrKeyPath);
-		}
-		
-		return self::getHostsWithServerSub('', $hostSettings, $server_ID);
-	}
-	
-		public static function getHostsWithServerSub ($keyPath = '', $hostSettings = array(), $server_ID = '')
-		{
-			$result = false;
-			
-			$hostsWithServer = array();
-			
-			if ($hostSettings['server_ID'] || $hostSettings['servers'])
-			{
-				$hostSettings = self::processHostSettings($hostSettings);
-				
-				foreach ($hostSettings['servers'] as $serverSettings)
-				{
-					if ($serverSettings['server_ID'] == $server_ID)
-					{
-						$hostsWithServer[] = $keyPath;
-						break;
-					}
-				}
-			}
-			else
-			{
-				foreach ($hostSettings as $keyPathPart => $hostSettingsSub)
-				{
-					$tempKeyPath = $keyPath;
-					
-					if ($tempKeyPath != '')
-					{
-						$tempKeyPath .= '>';
-					}
-					
-					$tempKeyPath .= $keyPathPart;
-				
-					$tempResult = self::getHostsWithServerSub($tempKeyPath, $hostSettingsSub, $server_ID);
-					
-					if ($tempResult)
-					{
-						foreach ($tempResult as $tempResultSub)
-						{
-							$hostsWithServer[] = $tempResultSub;
-						}
-					}
-				}
-			}
-			
-			if (XXX_Array::getFirstLevelItemTotal($hostsWithServer))
-			{
-				$result = $hostsWithServer;
-			}
-			
-			return $result;
-		}
-		
-	public static function doesHostHaveServer ($hostSettingsOrKeyPath = '', $server_ID = '')
-	{
-		return self::getHostsWithServer($hostSettingsOrKeyPath, $server_ID) !== false;
-	}
-	
 	public static function create ($connectionIdentifier, $hostSettingsOrKeyPath, $connectionType = 'content')
 	{
-		global $XXX_Resources_DataGrid_MemCacheD_Hosts;
-		
 		$result = false;
 		
 		if (XXX_Type::isArray($hostSettingsOrKeyPath))
 		{
 			$hostSettings = $hostSettingsOrKeyPath;
 			$keyPath = '';
-		}
-		else
-		{
-			$hostSettings = XXX_Array::traverseKeyPath($XXX_Resources_DataGrid_MemCacheD_Hosts, $hostSettingsOrKeyPath);
-			$keyPath = $hostSettingsOrKeyPath;
-		}
-		
+		}		
 		
 		if ($connectionType == 'content' || $connectionType == 'administration')
 		{
@@ -165,7 +74,7 @@ abstract class XXX_DataGrid_MemCacheD_Factory
 	public static function processHostSettings (array $hostSettings = array())
 	{
 		// If just 1 server, reformat it.
-		if (!$hostSettings['servers'] || (XXX_Array::getFirstLevelItemTotal($hostSettings['servers']) == 0 && XXX_Type::isValue($hostSettings['server_ID'])))
+		if (!$hostSettings['servers'] || (XXX_Array::getFirstLevelItemTotal($hostSettings['servers']) == 0))
 		{
 			$hostSettings['servers'] = array($hostSettings);
 		}
@@ -200,36 +109,10 @@ abstract class XXX_DataGrid_MemCacheD_Factory
 	
 	public static function processServerSettings (array $serverSettings = array(), array $hostSettings = array())
 	{
-		global $XXX_Resources_Servers;
-		
 		$serverSettings['connectionIdentifier'] = $hostSettings['connectionIdentifier'];
 		$serverSettings['connectionType'] = $hostSettings['connectionType'];
 		$serverSettings['keyPath'] = $hostSettings['keyPath'];
-		
-		if (!XXX_Type::isValue($serverSettings['address']))
-		{
-			$tempServer = XXX_Server::getServer($serverSettings['server_ID']);
 				
-			if (XXX_Server::isCurrentServer($serverSettings['server_ID']))
-			{			
-				$serverSettings['address'] = $tempServer['address']['ipv4']['local']['ip'];
-			}
-			else
-			{
-				$currentServer = XXX_Server::getCurrentServer();
-				
-				// Same VLAN
-				if ($currentServer['address']['ipv4']['private']['vlan'] == $tempServer['address']['ipv4']['private']['vlan'])
-				{
-					$serverSettings['address'] = $tempServer['address']['ipv4']['private']['ip'];
-				}
-				else
-				{
-					$serverSettings['address'] = $tempServer['address']['ipv4']['public']['ip'];
-				}
-			}
-		}
-		
 		if (!XXX_Type::isValue($serverSettings['port']))
 		{
 			if (XXX_Type::isValue($hostSettings['port']))
