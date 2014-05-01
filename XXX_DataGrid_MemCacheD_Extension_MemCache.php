@@ -38,6 +38,8 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 	
 	public function connect (array $settings)
 	{
+		$this->settings = $settings;
+		
 		if (XXX_Type::isFilledArray($this->settings['servers']))
 		{
 			foreach ($this->settings['servers'] as $server)
@@ -48,7 +50,7 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 		}
 		else
 		{
-			$this->connection->addServer($settings['address'], $settings['port'], $this->settings['persistent'], $settings['weight']);
+			$this->connection->addServer($this->settings['address'], $this->settings['port'], $this->settings['persistent'], $this->settings['weight']);
 		}		
 	}
 	
@@ -210,6 +212,7 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 					
 					if ($key !== '')
 					{
+						echo '[' . $key . ' ' . $value . ' ' . $this->compression . ' ' . $lifeTimeOrExpirationTimestamp . ']';
 						$tempResult = $this->connection->set($key, $value, $this->compression, $lifeTimeOrExpirationTimestamp);
 						
 						if ($tempResult !== false)
