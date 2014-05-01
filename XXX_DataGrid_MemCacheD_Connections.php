@@ -74,7 +74,6 @@ abstract class XXX_DataGrid_MemCacheD_Connections
 			self::$abstractionLayers[$name] = new XXX_DataGrid_MemCacheD_AbstractionLayer_Administration();
 			self::$abstractionLayers[$name]->open(self::$connections[$name]);
 		}
-			
 	}
 	
 	public static function initialize ()

@@ -38,11 +38,18 @@ class XXX_DataGrid_MemCacheD_Extension_MemCache
 	
 	public function connect (array $settings)
 	{
-		foreach ($this->settings['servers'] as $server)
+		if (XXX_Type::isFilledArray($this->settings['servers']))
 		{
-			// There is no connection made at this point, only when a request is done
-			$this->connection->addServer($server['address'], $server['port'], $this->settings['persistent'], $server['weight']);
+			foreach ($this->settings['servers'] as $server)
+			{
+				// There is no connection made at this point, only when a request is done
+				$this->connection->addServer($server['address'], $server['port'], $this->settings['persistent'], $server['weight']);
+			}
 		}
+		else
+		{
+			$this->connection->addServer($settings['address'], $settings['port'], $this->settings['persistent'], $settings['weight']);
+		}		
 	}
 	
 	public function disconnect ()
